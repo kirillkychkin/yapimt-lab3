@@ -33,7 +33,15 @@
             exitToolStripMenuItem = new ToolStripMenuItem();
             справкаToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            tabControl = new TabControl();
+            tabPageAnalysis = new TabPage();
+            tabPageResult = new TabPage();
+            codeTextBoxLabel = new Label();
+            codeTextBox = new RichTextBox();
+            buttonAnalyze = new Button();
             menuStrip1.SuspendLayout();
+            tabControl.SuspendLayout();
+            tabPageAnalysis.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -41,7 +49,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { выходToolStripMenuItem, справкаToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.Size = new Size(1159, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -73,17 +81,80 @@
             aboutToolStripMenuItem.Text = "О программе";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
+            // tabControl
+            // 
+            tabControl.Controls.Add(tabPageAnalysis);
+            tabControl.Controls.Add(tabPageResult);
+            tabControl.Location = new Point(12, 27);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(1135, 523);
+            tabControl.TabIndex = 3;
+            // 
+            // tabPageAnalysis
+            // 
+            tabPageAnalysis.Controls.Add(buttonAnalyze);
+            tabPageAnalysis.Controls.Add(codeTextBox);
+            tabPageAnalysis.Controls.Add(codeTextBoxLabel);
+            tabPageAnalysis.Location = new Point(4, 24);
+            tabPageAnalysis.Name = "tabPageAnalysis";
+            tabPageAnalysis.Padding = new Padding(3);
+            tabPageAnalysis.Size = new Size(1127, 495);
+            tabPageAnalysis.TabIndex = 0;
+            tabPageAnalysis.Text = "Код на анализ";
+            tabPageAnalysis.UseVisualStyleBackColor = true;
+            // 
+            // tabPageResult
+            // 
+            tabPageResult.Location = new Point(4, 24);
+            tabPageResult.Name = "tabPageResult";
+            tabPageResult.Padding = new Padding(3);
+            tabPageResult.Size = new Size(1127, 495);
+            tabPageResult.TabIndex = 1;
+            tabPageResult.Text = "Результат анализа";
+            tabPageResult.UseVisualStyleBackColor = true;
+            // 
+            // codeTextBoxLabel
+            // 
+            codeTextBoxLabel.AutoSize = true;
+            codeTextBoxLabel.Location = new Point(6, 15);
+            codeTextBoxLabel.Name = "codeTextBoxLabel";
+            codeTextBoxLabel.Size = new Size(275, 15);
+            codeTextBoxLabel.TabIndex = 0;
+            codeTextBoxLabel.Text = "Вставьте код, который нужно проанализировать";
+            // 
+            // codeTextBox
+            // 
+            codeTextBox.Location = new Point(6, 33);
+            codeTextBox.Name = "codeTextBox";
+            codeTextBox.Size = new Size(1022, 459);
+            codeTextBox.TabIndex = 1;
+            codeTextBox.Text = "";
+            // 
+            // buttonAnalyze
+            // 
+            buttonAnalyze.Location = new Point(1034, 48);
+            buttonAnalyze.Name = "buttonAnalyze";
+            buttonAnalyze.Size = new Size(77, 44);
+            buttonAnalyze.TabIndex = 2;
+            buttonAnalyze.Text = "Анализировать";
+            buttonAnalyze.UseVisualStyleBackColor = true;
+            // 
             // lexer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1159, 550);
+            Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "lexer";
             Text = "lexer";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            tabControl.ResumeLayout(false);
+            tabPageAnalysis.ResumeLayout(false);
+            tabPageAnalysis.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -95,5 +166,11 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem справкаToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
+        private TabControl tabControl;
+        private TabPage tabPageAnalysis;
+        private TabPage tabPageResult;
+        private Label codeTextBoxLabel;
+        private RichTextBox codeTextBox;
+        private Button buttonAnalyze;
     }
 }
