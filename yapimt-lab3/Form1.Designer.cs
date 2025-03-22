@@ -35,10 +35,10 @@
             aboutToolStripMenuItem = new ToolStripMenuItem();
             tabControl = new TabControl();
             tabPageAnalysis = new TabPage();
-            tabPageResult = new TabPage();
-            codeTextBoxLabel = new Label();
-            codeTextBox = new RichTextBox();
             buttonAnalyze = new Button();
+            codeTextBox = new RichTextBox();
+            codeTextBoxLabel = new Label();
+            tabPageResult = new TabPage();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             tabPageAnalysis.SuspendLayout();
@@ -104,15 +104,23 @@
             tabPageAnalysis.Text = "Код на анализ";
             tabPageAnalysis.UseVisualStyleBackColor = true;
             // 
-            // tabPageResult
+            // buttonAnalyze
             // 
-            tabPageResult.Location = new Point(4, 24);
-            tabPageResult.Name = "tabPageResult";
-            tabPageResult.Padding = new Padding(3);
-            tabPageResult.Size = new Size(1127, 495);
-            tabPageResult.TabIndex = 1;
-            tabPageResult.Text = "Результат анализа";
-            tabPageResult.UseVisualStyleBackColor = true;
+            buttonAnalyze.Location = new Point(1034, 48);
+            buttonAnalyze.Name = "buttonAnalyze";
+            buttonAnalyze.Size = new Size(77, 44);
+            buttonAnalyze.TabIndex = 2;
+            buttonAnalyze.Text = "Анализировать";
+            buttonAnalyze.UseVisualStyleBackColor = true;
+            buttonAnalyze.Click += buttonAnalyze_Click;
+            // 
+            // codeTextBox
+            // 
+            codeTextBox.Location = new Point(6, 33);
+            codeTextBox.Name = "codeTextBox";
+            codeTextBox.Size = new Size(1022, 459);
+            codeTextBox.TabIndex = 1;
+            codeTextBox.Text = "";
             // 
             // codeTextBoxLabel
             // 
@@ -123,22 +131,15 @@
             codeTextBoxLabel.TabIndex = 0;
             codeTextBoxLabel.Text = "Вставьте код, который нужно проанализировать";
             // 
-            // codeTextBox
+            // tabPageResult
             // 
-            codeTextBox.Location = new Point(6, 33);
-            codeTextBox.Name = "codeTextBox";
-            codeTextBox.Size = new Size(1022, 459);
-            codeTextBox.TabIndex = 1;
-            codeTextBox.Text = "";
-            // 
-            // buttonAnalyze
-            // 
-            buttonAnalyze.Location = new Point(1034, 48);
-            buttonAnalyze.Name = "buttonAnalyze";
-            buttonAnalyze.Size = new Size(77, 44);
-            buttonAnalyze.TabIndex = 2;
-            buttonAnalyze.Text = "Анализировать";
-            buttonAnalyze.UseVisualStyleBackColor = true;
+            tabPageResult.Location = new Point(4, 24);
+            tabPageResult.Name = "tabPageResult";
+            tabPageResult.Padding = new Padding(3);
+            tabPageResult.Size = new Size(1127, 495);
+            tabPageResult.TabIndex = 1;
+            tabPageResult.Text = "Результат анализа";
+            tabPageResult.UseVisualStyleBackColor = true;
             // 
             // lexer
             // 

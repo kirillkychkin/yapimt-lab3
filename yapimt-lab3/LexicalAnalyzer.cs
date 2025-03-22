@@ -15,30 +15,92 @@ namespace yapimt_lab3
         private int position;
         private string Buf;
 
-        private Dictionary<string, (string type, int number)> keywordsTable;
-        private Dictionary<string, (string type, int number)> operatorsTable;
-        private Dictionary<string, (string type, int number)> specialSymbolsTable;
-        private Dictionary<string, (string type, int number)> identifiersTable;
-        private Dictionary<string, (string type, int number)> numericConstantsTable;
-        private Dictionary<string, (string type, int number)> stringConstantsTable;
-
-        public LexicalAnalyzer(string input)
-        {
-            this.input = input;
-            this.position = 0;
-            this.Buf = "";
-
-            // Инициализация таблиц
-            keywordsTable = new Dictionary<string, (string, int)>
+        private Dictionary<string, (string type, int number)> staticKeywordsTable = new Dictionary<string, (string, int)>
         {
             {"int", ("keyword", 1)},
             {"float", ("keyword", 2)},
             {"if", ("keyword", 3)},
             {"else", ("keyword", 4)},
-            
-        };
+abstract
+as
+base
+bool
+break
+byte
+case
+catch
+char
+checked
+class
+const
+continue
+decimal
+default
+delegate
+do
+double
+else
+enum
+event
+explicit
+extern
+false
+finally
+fixed
+float
+for
+foreach
+goto
+if
+implicit
+in
+int
+interface
+internal
+is
+lock
+long
+namespace
+new
+null
+object
+operator
+out
+override
+params
+private
+protected
+public
+readonly
+ref
+return
+sbyte
+sealed
+short
+sizeof
+stackalloc
+static
+string
+struct
+switch
+this
+throw
+true
+try
+typeof
+uint
+ulong
+unchecked
+unsafe
+ushort
+using
+virtual
+void
+volatile
+while
 
-            operatorsTable = new Dictionary<string, (string, int)>
+        };
+        private Dictionary<string, (string type, int number)> staticOperatorsTable = new Dictionary<string, (string, int)>
         {
             {"+", ("operator", 1)},
             {"-", ("operator", 2)},
@@ -46,10 +108,9 @@ namespace yapimt_lab3
             {"/", ("operator", 4)},
             {"==", ("operator", 5)},
             {"!=", ("operator", 6)},
-            
-        };
 
-            specialSymbolsTable = new Dictionary<string, (string, int)>
+        };
+        private Dictionary<string, (string type, int number)> staticSpecialSymbolsTable = new Dictionary<string, (string, int)>
         {
             {";", ("special", 1)},
             {",", ("special", 2)},
@@ -57,16 +118,31 @@ namespace yapimt_lab3
             {")", ("special", 4)},
             {"{", ("special", 5)},
             {"}", ("special", 6)},
-            
-        };
 
-            identifiersTable = new Dictionary<string, (string, int)>();
-            numericConstantsTable = new Dictionary<string, (string, int)>();
-            stringConstantsTable = new Dictionary<string, (string, int)>();
+        };
+        private Dictionary<string, (string type, int number)> keywordsTable;
+        private Dictionary<string, (string type, int number)> operatorsTable;
+        private Dictionary<string, (string type, int number)> specialSymbolsTable;
+        private Dictionary<string, (string type, int number)> identifiersTable;
+        private Dictionary<string, (string type, int number)> numericConstantsTable;
+        private Dictionary<string, (string type, int number)> stringConstantsTable;
+
+        public LexicalAnalyzer()
+        {
+            this.position = 0;
+            this.Buf = "";
         }
 
-        public void Analyze()
+        public void Analyze(string _input, ref Dictionary<string, (string type, int number)> _keywordsTable, ref Dictionary<string, (string type, int number)> _operatorsTable, ref Dictionary<string, (string type, int number)> _specialSymbolsTable, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
+
         {
+            this.input = _input;
+            keywordsTable = _keywordsTable;
+            operatorsTable = _operatorsTable;
+            specialSymbolsTable = _specialSymbolsTable;
+            identifiersTable = _identifiersTable;
+            numericConstantsTable = _numericConstantsTable;
+            stringConstantsTable = _stringConstantsTable;
             while (position < input.Length)
             {
                 char currentChar = input[position];
@@ -109,15 +185,15 @@ namespace yapimt_lab3
                 position++;
             }
 
-            if (keywordsTable.ContainsKey(Buf))
+            if (staticKeywordsTable.ContainsKey(Buf))
             {
                 var (type, number) = keywordsTable[Buf];
-                Console.WriteLine($"Keyword: {Buf}, Type: {type}, Number: {number}");
+                MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
             }
             else
             {
                 var (type, number) = Buf_Ident();
-                Console.WriteLine($"Identifier: {Buf}, Type: {type}, Number: {number}");
+                MessageBox.Show($"Identifier: {Buf}, Type: {type}, Number: {number}");
             }
         }
 
@@ -131,7 +207,7 @@ namespace yapimt_lab3
             }
 
             var (type, number) = Buf_Num();
-            Console.WriteLine($"Numeric Constant: {Buf}, Type: {type}, Number: {number}");
+            MessageBox.Show($"Numeric Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
         private void ProcessStringConstant()
@@ -146,7 +222,7 @@ namespace yapimt_lab3
             position++; // Пропустить закрывающую кавычку
 
             var (type, number) = Buf_Str();
-            Console.WriteLine($"String Constant: {Buf}, Type: {type}, Number: {number}");
+            MessageBox.Show($"String Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
         private void ProcessOperatorOrSpecialSymbol()
@@ -154,15 +230,15 @@ namespace yapimt_lab3
             Buf = input[position].ToString();
             position++;
 
-            if (operatorsTable.ContainsKey(Buf))
+            if (staticOperatorsTable.ContainsKey(Buf))
             {
                 var (type, number) = operatorsTable[Buf];
-                Console.WriteLine($"Operator: {Buf}, Type: {type}, Number: {number}");
+                MessageBox.Show($"Operator: {Buf}, Type: {type}, Number: {number}");
             }
-            else if (specialSymbolsTable.ContainsKey(Buf))
+            else if (staticSpecialSymbolsTable.ContainsKey(Buf))
             {
                 var (type, number) = specialSymbolsTable[Buf];
-                Console.WriteLine($"Special Symbol: {Buf}, Type: {type}, Number: {number}");
+                MessageBox.Show($"Special Symbol: {Buf}, Type: {type}, Number: {number}");
             }
         }
 
