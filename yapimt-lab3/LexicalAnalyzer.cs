@@ -8,6 +8,7 @@ namespace yapimt_lab3
 {
     using System;
     using System.Collections.Generic;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     public class LexicalAnalyzer
     {
@@ -15,7 +16,7 @@ namespace yapimt_lab3
         private int position;
         private string Buf;
 
-        private Dictionary<string,int> keywordsTable;
+        private Dictionary<string, (string type, int number)> keywordsTable;
         private Dictionary<string, (string type, int number)> operatorsTable;
         private Dictionary<string, (string type, int number)> specialSymbolsTable;
         private Dictionary<string, (string type, int number)> identifiersTable;
@@ -28,7 +29,7 @@ namespace yapimt_lab3
             this.Buf = "";
         }
 
-        public void Analyze(string _input, ref Dictionary<string, int> _keywordsTable, ref Dictionary<string, (string type, int number)> _operatorsTable, ref Dictionary<string, (string type, int number)> _specialSymbolsTable, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
+        public void Analyze(string _input, ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string type, int number)> _keywordsTable, ref Dictionary<string, (string type, int number)> _operatorsTable, ref Dictionary<string, (string type, int number)> _specialSymbolsTable, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
 
         {
             this.input = _input;
@@ -50,7 +51,7 @@ namespace yapimt_lab3
 
                 if (char.IsLetter(currentChar))
                 {
-                    ProcessIdentifierOrKeyword(ref _keywordsTable);
+                    ProcessIdentifierOrKeyword(ref lexemSequence);
                 }
                 else if (char.IsDigit(currentChar))
                 {
@@ -71,7 +72,7 @@ namespace yapimt_lab3
             }
         }
 
-        private void ProcessIdentifierOrKeyword(ref Dictionary<string, int> keywordsTable)
+        private void ProcessIdentifierOrKeyword(ref List<KeyValuePair<string, int>> lexemSequence)
         {
             Buf = "";
             while (position < input.Length && (char.IsLetterOrDigit(input[position]) || input[position] == '_'))
@@ -82,16 +83,21 @@ namespace yapimt_lab3
 
             if (internalLexems.staticKeywordsTable.ContainsKey(Buf))
             {
-                if(!keywordsTable.ContainsKey(Buf))
-                {
-                    var (type, number) = internalLexems.staticKeywordsTable[Buf];
-                    keywordsTable[Buf] = 1;
-                }
-                else
-                {
-                    keywordsTable[Buf] += 1;
-                }
+                //if(!keywordsTable.ContainsKey(Buf))
+                //{
+                //    var (type, number) = internalLexems.staticKeywordsTable[Buf];
+                //    keywordsTable[Buf] = 1;
+                //}
+                //else
+                //{
+                //    keywordsTable[Buf] += 1;
+                //}
                 //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
+                var (type, number) = internalLexems.staticKeywordsTable[Buf];
+                KeyValuePair<string, int> nextKeyword = new KeyValuePair<string, int>(type, number);
+                lexemSequence.Add(nextKeyword);
+                //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
+
             }
             else
             {
