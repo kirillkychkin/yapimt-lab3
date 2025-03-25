@@ -13,6 +13,13 @@ namespace yapimt_lab3
             numericConstantsTable = new Dictionary<string, (string, int)>();
             stringConstantsTable = new Dictionary<string, (string, int)>();
 
+            identifiersList = new Dictionary<string, int>();
+            numericConstantsList = new Dictionary<string, int>();
+            stringConstantsList = new Dictionary<string, int>();
+            keywordsList = new Dictionary<string, int>();
+            operatorsList = new Dictionary<string, int>();
+            specSymbolsList = new Dictionary<string, int>();
+
             analyzer = new LexicalAnalyzer();
         }
         private Dictionary<string, (string type, int number)> identifiersTable;
@@ -42,6 +49,20 @@ namespace yapimt_lab3
             MessageBox.Show(getAboutText());
         }
 
+        private void WriteToColumn(
+            Label container,
+            Dictionary<string, int> list
+            )
+        {
+            string variable = "";
+            foreach (KeyValuePair<string, int> entry in list)
+            {
+                // Добавить в список лексем
+                variable += $"{entry.Key} ({entry.Value.ToString()} повторений) {Environment.NewLine}";
+            }
+            container.Text = variable;
+        }
+
         private void buttonAnalyze_Click(object sender, EventArgs e)
         {
             lexemSequence = new List<KeyValuePair<string, int>>();
@@ -62,15 +83,23 @@ namespace yapimt_lab3
                 ref operatorsList, 
                 ref specSymbolsList
                 );
-            string keywordsOut = "";
+            string lexemsOut = "";
 
             foreach (KeyValuePair<string, int> entry in lexemSequence)
             {
                 // Добавить в список лексем
-                keywordsOut += $"type: {entry.Key} number:  {entry.Value.ToString()} {Environment.NewLine}";
+                lexemsOut += $"type: {entry.Key} number:  {entry.Value.ToString()} {Environment.NewLine}";
             }
+            textSequence.Text = lexemsOut;
+
+            WriteToColumn(textKeywords, keywordsList);
+            WriteToColumn(textIdentifiers, identifiersList);
+            WriteToColumn(textStrings, stringConstantsList);
+            WriteToColumn(textNumeric, numericConstantsList);
+            WriteToColumn(textOperators, operatorsList);
+            WriteToColumn(textSymbols, specSymbolsList);
+
             MessageBox.Show("Готово! Посмотрите результат на вкладке Результат анализа");
-            textSequence.Text = keywordsOut;
         }
     }
 }

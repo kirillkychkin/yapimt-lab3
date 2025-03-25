@@ -39,38 +39,38 @@
             codeTextBox = new RichTextBox();
             codeTextBoxLabel = new Label();
             tabPageResult = new TabPage();
+            panelSymbols = new Panel();
+            textSymbols = new Label();
+            labelSymbols = new Label();
             panelOperators = new Panel();
+            textOperators = new Label();
             labelOperators = new Label();
             panelNumeric = new Panel();
+            textNumeric = new Label();
             labelNumeric = new Label();
             panelStrings = new Panel();
+            textStrings = new Label();
             labelStrings = new Label();
             panelIndentifiers = new Panel();
+            textIdentifiers = new Label();
             labelIdentifiers = new Label();
             panelKeywords = new Panel();
+            textKeywords = new Label();
             labelKeywords = new Label();
             panelSequence = new Panel();
             labelSequence = new Label();
             textSequence = new Label();
-            panelSymbols = new Panel();
-            labelSymbols = new Label();
-            textKeywords = new Label();
-            textIdentifiers = new Label();
-            textStrings = new Label();
-            textNumeric = new Label();
-            textOperators = new Label();
-            textSymbols = new Label();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             tabPageAnalysis.SuspendLayout();
             tabPageResult.SuspendLayout();
+            panelSymbols.SuspendLayout();
             panelOperators.SuspendLayout();
             panelNumeric.SuspendLayout();
             panelStrings.SuspendLayout();
             panelIndentifiers.SuspendLayout();
             panelKeywords.SuspendLayout();
             panelSequence.SuspendLayout();
-            panelSymbols.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -114,10 +114,11 @@
             // 
             tabControl.Controls.Add(tabPageAnalysis);
             tabControl.Controls.Add(tabPageResult);
-            tabControl.Location = new Point(12, 27);
+            tabControl.Dock = DockStyle.Fill;
+            tabControl.Location = new Point(0, 24);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(1135, 523);
+            tabControl.Size = new Size(1159, 526);
             tabControl.TabIndex = 3;
             // 
             // tabPageAnalysis
@@ -128,16 +129,17 @@
             tabPageAnalysis.Location = new Point(4, 24);
             tabPageAnalysis.Name = "tabPageAnalysis";
             tabPageAnalysis.Padding = new Padding(3);
-            tabPageAnalysis.Size = new Size(1127, 495);
+            tabPageAnalysis.Size = new Size(1151, 498);
             tabPageAnalysis.TabIndex = 0;
             tabPageAnalysis.Text = "Код на анализ";
             tabPageAnalysis.UseVisualStyleBackColor = true;
             // 
             // buttonAnalyze
             // 
-            buttonAnalyze.Location = new Point(1034, 48);
+            buttonAnalyze.Dock = DockStyle.Right;
+            buttonAnalyze.Location = new Point(1071, 18);
             buttonAnalyze.Name = "buttonAnalyze";
-            buttonAnalyze.Size = new Size(77, 44);
+            buttonAnalyze.Size = new Size(77, 477);
             buttonAnalyze.TabIndex = 2;
             buttonAnalyze.Text = "Анализировать";
             buttonAnalyze.UseVisualStyleBackColor = true;
@@ -145,16 +147,18 @@
             // 
             // codeTextBox
             // 
-            codeTextBox.Location = new Point(6, 33);
+            codeTextBox.Dock = DockStyle.Fill;
+            codeTextBox.Location = new Point(3, 18);
             codeTextBox.Name = "codeTextBox";
-            codeTextBox.Size = new Size(1022, 459);
+            codeTextBox.Size = new Size(1145, 477);
             codeTextBox.TabIndex = 1;
             codeTextBox.Text = "";
             // 
             // codeTextBoxLabel
             // 
             codeTextBoxLabel.AutoSize = true;
-            codeTextBoxLabel.Location = new Point(6, 15);
+            codeTextBoxLabel.Dock = DockStyle.Top;
+            codeTextBoxLabel.Location = new Point(3, 3);
             codeTextBoxLabel.Name = "codeTextBoxLabel";
             codeTextBoxLabel.Size = new Size(275, 15);
             codeTextBoxLabel.TabIndex = 0;
@@ -172,10 +176,39 @@
             tabPageResult.Location = new Point(4, 24);
             tabPageResult.Name = "tabPageResult";
             tabPageResult.Padding = new Padding(3);
-            tabPageResult.Size = new Size(1127, 495);
+            tabPageResult.Size = new Size(1151, 498);
             tabPageResult.TabIndex = 1;
             tabPageResult.Text = "Результат анализа";
             tabPageResult.UseVisualStyleBackColor = true;
+            // 
+            // panelSymbols
+            // 
+            panelSymbols.AutoScroll = true;
+            panelSymbols.Controls.Add(textSymbols);
+            panelSymbols.Controls.Add(labelSymbols);
+            panelSymbols.Dock = DockStyle.Left;
+            panelSymbols.Location = new Point(953, 137);
+            panelSymbols.Name = "panelSymbols";
+            panelSymbols.Size = new Size(190, 358);
+            panelSymbols.TabIndex = 6;
+            // 
+            // textSymbols
+            // 
+            textSymbols.AutoSize = true;
+            textSymbols.Location = new Point(6, 33);
+            textSymbols.Name = "textSymbols";
+            textSymbols.Size = new Size(38, 15);
+            textSymbols.TabIndex = 1;
+            textSymbols.Text = "label6";
+            // 
+            // labelSymbols
+            // 
+            labelSymbols.AutoSize = true;
+            labelSymbols.Location = new Point(6, 3);
+            labelSymbols.Name = "labelSymbols";
+            labelSymbols.Size = new Size(92, 15);
+            labelSymbols.TabIndex = 0;
+            labelSymbols.Text = "Спец. символы";
             // 
             // panelOperators
             // 
@@ -183,10 +216,19 @@
             panelOperators.Controls.Add(textOperators);
             panelOperators.Controls.Add(labelOperators);
             panelOperators.Dock = DockStyle.Left;
-            panelOperators.Location = new Point(747, 137);
+            panelOperators.Location = new Point(763, 137);
             panelOperators.Name = "panelOperators";
-            panelOperators.Size = new Size(186, 355);
+            panelOperators.Size = new Size(190, 358);
             panelOperators.TabIndex = 5;
+            // 
+            // textOperators
+            // 
+            textOperators.AutoSize = true;
+            textOperators.Location = new Point(6, 33);
+            textOperators.Name = "textOperators";
+            textOperators.Size = new Size(38, 15);
+            textOperators.TabIndex = 1;
+            textOperators.Text = "label5";
             // 
             // labelOperators
             // 
@@ -203,10 +245,19 @@
             panelNumeric.Controls.Add(textNumeric);
             panelNumeric.Controls.Add(labelNumeric);
             panelNumeric.Dock = DockStyle.Left;
-            panelNumeric.Location = new Point(561, 137);
+            panelNumeric.Location = new Point(573, 137);
             panelNumeric.Name = "panelNumeric";
-            panelNumeric.Size = new Size(186, 355);
+            panelNumeric.Size = new Size(190, 358);
             panelNumeric.TabIndex = 4;
+            // 
+            // textNumeric
+            // 
+            textNumeric.AutoSize = true;
+            textNumeric.Location = new Point(6, 33);
+            textNumeric.Name = "textNumeric";
+            textNumeric.Size = new Size(38, 15);
+            textNumeric.TabIndex = 1;
+            textNumeric.Text = "label4";
             // 
             // labelNumeric
             // 
@@ -223,10 +274,19 @@
             panelStrings.Controls.Add(textStrings);
             panelStrings.Controls.Add(labelStrings);
             panelStrings.Dock = DockStyle.Left;
-            panelStrings.Location = new Point(375, 137);
+            panelStrings.Location = new Point(383, 137);
             panelStrings.Name = "panelStrings";
-            panelStrings.Size = new Size(186, 355);
+            panelStrings.Size = new Size(190, 358);
             panelStrings.TabIndex = 3;
+            // 
+            // textStrings
+            // 
+            textStrings.AutoSize = true;
+            textStrings.Location = new Point(3, 33);
+            textStrings.Name = "textStrings";
+            textStrings.Size = new Size(38, 15);
+            textStrings.TabIndex = 1;
+            textStrings.Text = "label3";
             // 
             // labelStrings
             // 
@@ -243,10 +303,19 @@
             panelIndentifiers.Controls.Add(textIdentifiers);
             panelIndentifiers.Controls.Add(labelIdentifiers);
             panelIndentifiers.Dock = DockStyle.Left;
-            panelIndentifiers.Location = new Point(189, 137);
+            panelIndentifiers.Location = new Point(193, 137);
             panelIndentifiers.Name = "panelIndentifiers";
-            panelIndentifiers.Size = new Size(186, 355);
+            panelIndentifiers.Size = new Size(190, 358);
             panelIndentifiers.TabIndex = 2;
+            // 
+            // textIdentifiers
+            // 
+            textIdentifiers.AutoSize = true;
+            textIdentifiers.Location = new Point(6, 33);
+            textIdentifiers.Name = "textIdentifiers";
+            textIdentifiers.Size = new Size(38, 15);
+            textIdentifiers.TabIndex = 1;
+            textIdentifiers.Text = "label2";
             // 
             // labelIdentifiers
             // 
@@ -265,8 +334,17 @@
             panelKeywords.Dock = DockStyle.Left;
             panelKeywords.Location = new Point(3, 137);
             panelKeywords.Name = "panelKeywords";
-            panelKeywords.Size = new Size(186, 355);
+            panelKeywords.Size = new Size(190, 358);
             panelKeywords.TabIndex = 1;
+            // 
+            // textKeywords
+            // 
+            textKeywords.AutoSize = true;
+            textKeywords.Location = new Point(3, 33);
+            textKeywords.Name = "textKeywords";
+            textKeywords.Size = new Size(38, 15);
+            textKeywords.TabIndex = 1;
+            textKeywords.Text = "label1";
             // 
             // labelKeywords
             // 
@@ -285,7 +363,7 @@
             panelSequence.Dock = DockStyle.Top;
             panelSequence.Location = new Point(3, 3);
             panelSequence.Name = "panelSequence";
-            panelSequence.Size = new Size(1121, 134);
+            panelSequence.Size = new Size(1145, 134);
             panelSequence.TabIndex = 0;
             // 
             // labelSequence
@@ -306,80 +384,6 @@
             textSequence.TabIndex = 0;
             textSequence.Text = "label1";
             // 
-            // panelSymbols
-            // 
-            panelSymbols.AutoScroll = true;
-            panelSymbols.Controls.Add(textSymbols);
-            panelSymbols.Controls.Add(labelSymbols);
-            panelSymbols.Dock = DockStyle.Left;
-            panelSymbols.Location = new Point(933, 137);
-            panelSymbols.Name = "panelSymbols";
-            panelSymbols.Size = new Size(186, 355);
-            panelSymbols.TabIndex = 6;
-            // 
-            // labelSymbols
-            // 
-            labelSymbols.AutoSize = true;
-            labelSymbols.Location = new Point(6, 3);
-            labelSymbols.Name = "labelSymbols";
-            labelSymbols.Size = new Size(92, 15);
-            labelSymbols.TabIndex = 0;
-            labelSymbols.Text = "Спец. символы";
-            // 
-            // textKeywords
-            // 
-            textKeywords.AutoSize = true;
-            textKeywords.Location = new Point(3, 33);
-            textKeywords.Name = "textKeywords";
-            textKeywords.Size = new Size(38, 15);
-            textKeywords.TabIndex = 1;
-            textKeywords.Text = "label1";
-            // 
-            // textIdentifiers
-            // 
-            textIdentifiers.AutoSize = true;
-            textIdentifiers.Location = new Point(6, 33);
-            textIdentifiers.Name = "textIdentifiers";
-            textIdentifiers.Size = new Size(38, 15);
-            textIdentifiers.TabIndex = 1;
-            textIdentifiers.Text = "label2";
-            // 
-            // textStrings
-            // 
-            textStrings.AutoSize = true;
-            textStrings.Location = new Point(3, 33);
-            textStrings.Name = "textStrings";
-            textStrings.Size = new Size(38, 15);
-            textStrings.TabIndex = 1;
-            textStrings.Text = "label3";
-            // 
-            // textNumeric
-            // 
-            textNumeric.AutoSize = true;
-            textNumeric.Location = new Point(6, 33);
-            textNumeric.Name = "textNumeric";
-            textNumeric.Size = new Size(38, 15);
-            textNumeric.TabIndex = 1;
-            textNumeric.Text = "label4";
-            // 
-            // textOperators
-            // 
-            textOperators.AutoSize = true;
-            textOperators.Location = new Point(6, 33);
-            textOperators.Name = "textOperators";
-            textOperators.Size = new Size(38, 15);
-            textOperators.TabIndex = 1;
-            textOperators.Text = "label5";
-            // 
-            // textSymbols
-            // 
-            textSymbols.AutoSize = true;
-            textSymbols.Location = new Point(6, 33);
-            textSymbols.Name = "textSymbols";
-            textSymbols.Size = new Size(38, 15);
-            textSymbols.TabIndex = 1;
-            textSymbols.Text = "label6";
-            // 
             // lexer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -396,6 +400,8 @@
             tabPageAnalysis.ResumeLayout(false);
             tabPageAnalysis.PerformLayout();
             tabPageResult.ResumeLayout(false);
+            panelSymbols.ResumeLayout(false);
+            panelSymbols.PerformLayout();
             panelOperators.ResumeLayout(false);
             panelOperators.PerformLayout();
             panelNumeric.ResumeLayout(false);
@@ -408,8 +414,6 @@
             panelKeywords.PerformLayout();
             panelSequence.ResumeLayout(false);
             panelSequence.PerformLayout();
-            panelSymbols.ResumeLayout(false);
-            panelSymbols.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
