@@ -46,18 +46,19 @@ namespace yapimt_lab3
                 // Если первый символ - цифра, то лексема является числовой константой
                 else if (char.IsDigit(currentChar))
                 {
-                    ProcessNumericConstant(ref numericConstantsTable);
+                    ProcessNumericConstant(ref lexemSequence, ref numericConstantsTable);
                 }
                 // Если первый символ - начало строки
                 else if (currentChar == '"')
                 {
-                    ProcessStringConstant(ref stringConstantsTable);
+                    ProcessStringConstant(ref lexemSequence, ref stringConstantsTable);
                 }
+                // Если есть в списке операторов или символов
                 else if (internalLexems.staticOperatorsTable.ContainsKey(currentChar.ToString()) || internalLexems.staticSpecialSymbolsTable.ContainsKey(currentChar.ToString()))
                 {
                     ProcessOperatorOrSpecialSymbol(ref lexemSequence);
                 }
-                // идем дальше если не смогли определить (конец строки, табы и т.д.)
+                // Идем дальше если не смогли определить (конец строки, табы и т.д.)
                 else
                 {
                     position++;
@@ -65,15 +66,23 @@ namespace yapimt_lab3
             }
         }
 
+        private void AddToSequence(string type, int number, ref List<KeyValuePair<string, int>> lexemSequence)
+        {
+            KeyValuePair<string, int> nextLexem = new KeyValuePair<string, int>(type, number);
+            lexemSequence.Add(nextLexem);
+        }
+
         private void ProcessIdentifierOrKeyword(ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string, int)> identifiersTable)
         {
+            // Очистка предыдущего содержимого буфера
             Buf = "";
+            // Записываем в буфер пока не дойдем до конца инпута и пока символы это цифры или буквы
             while (position < input.Length && (char.IsLetterOrDigit(input[position]) || input[position] == '_'))
             {
                 Pbuf(input[position]);
                 position++;
             }
-
+            // Если есть в списке ключевых слов
             if (internalLexems.staticKeywordsTable.ContainsKey(Buf))
             {
                 //if(!keywordsTable.ContainsKey(Buf))
@@ -86,20 +95,22 @@ namespace yapimt_lab3
                 //    keywordsTable[Buf] += 1;
                 //}
                 //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
+
+                // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = Buf_Key();
-                KeyValuePair<string, int> nextKeyword = new KeyValuePair<string, int>(type, number);
-                lexemSequence.Add(nextKeyword);
+                AddToSequence(type, number, ref lexemSequence);
 
             }
+            // Если нет в списке ключевых слов
             else
             {
-                var (type, number) = Buf_Ident(ref identifiersTable); 
-                KeyValuePair<string, int> nextIdentifier = new KeyValuePair<string, int>(type, number);
-                lexemSequence.Add(nextIdentifier);
+                // Получаем тип, номер - записываем в lexemSequence
+                var (type, number) = Buf_Ident(ref identifiersTable);
+                AddToSequence(type, number, ref lexemSequence);
             }
         }
 
-        private void ProcessNumericConstant(ref Dictionary<string, (string, int)> numericConstantsTable)
+        private void ProcessNumericConstant(ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string, int)> numericConstantsTable)
         {
             Buf = "";
             while (position < input.Length && char.IsDigit(input[position]))
@@ -108,10 +119,12 @@ namespace yapimt_lab3
                 position++;
             }
 
+            // Получаем тип, номер - записываем в lexemSequence
             var (type, number) = Buf_Num(ref numericConstantsTable);
+            AddToSequence(type, number, ref lexemSequence);
         }
 
-        private void ProcessStringConstant(ref Dictionary<string, (string, int)> stringConstantsTable)
+        private void ProcessStringConstant(ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string, int)> stringConstantsTable)
         {
             Buf = "";
             position++; // Пропустить открывающую кавычку
@@ -122,30 +135,35 @@ namespace yapimt_lab3
             }
             position++; // Пропустить закрывающую кавычку
 
+            // Получаем тип, номер - записываем в lexemSequence
             var (type, number) = Buf_Str(ref stringConstantsTable);
+            AddToSequence(type, number, ref lexemSequence);
         }
 
         private void ProcessOperatorOrSpecialSymbol(ref List<KeyValuePair<string, int>> lexemSequence)
         {
             Buf = input[position].ToString();
             position++;
-
+            
+            // Если в списке операторов
             if (internalLexems.staticOperatorsTable.ContainsKey(Buf))
             {
+                // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = internalLexems.staticOperatorsTable[Buf];
-                KeyValuePair<string, int> nextOperator = new KeyValuePair<string, int>(type, number);
-                lexemSequence.Add(nextOperator);
+                AddToSequence(type, number, ref lexemSequence);
             }
+            // Если в списке спец символов
             else if (internalLexems.staticSpecialSymbolsTable.ContainsKey(Buf))
             {
+                // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = internalLexems.staticSpecialSymbolsTable[Buf];
-                KeyValuePair<string, int> nextSymbol = new KeyValuePair<string, int>(type, number);
-                lexemSequence.Add(nextSymbol);
+                AddToSequence(type, number, ref lexemSequence);
             }
         }
 
         private void Pbuf(char c)
         {
+            // Запись лексемы в буфер посимвольно
             Buf += c;
         }
 
