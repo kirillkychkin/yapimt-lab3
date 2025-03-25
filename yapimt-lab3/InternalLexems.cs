@@ -127,7 +127,9 @@ namespace yapimt_lab3
             {")", ("special", 4)},
             {"{", ("special", 5)},
             {"}", ("special", 6)},
-            {"}", ("special", 7)},
+            {"@", ("special", 7)},
+            {"$", ("special", 8)},
+            {"_", ("special", 9)},
 
         };
     }
