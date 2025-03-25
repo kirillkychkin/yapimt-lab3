@@ -16,23 +16,17 @@ namespace yapimt_lab3
         private int position;
         private string Buf;
 
-        private Dictionary<string, (string type, int number)> identifiersTable;
-        private Dictionary<string, (string type, int number)> numericConstantsTable;
-        private Dictionary<string, (string type, int number)> stringConstantsTable;
-
         public LexicalAnalyzer()
         {
             this.position = 0;
             this.Buf = "";
         }
 
-        public void Analyze(string _input, ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
+        public void Analyze(string _input, ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string type, int number)> identifiersTable, ref Dictionary<string, (string type, int number)> numericConstantsTable, ref Dictionary<string, (string type, int number)> stringConstantsTable)
 
         {
             this.input = _input;
-            identifiersTable = _identifiersTable;
-            numericConstantsTable = _numericConstantsTable;
-            stringConstantsTable = _stringConstantsTable;
+
             while (position < input.Length)
             {
                 char currentChar = input[position];
@@ -45,15 +39,15 @@ namespace yapimt_lab3
 
                 if (char.IsLetter(currentChar))
                 {
-                    ProcessIdentifierOrKeyword(ref lexemSequence);
+                    ProcessIdentifierOrKeyword(ref lexemSequence, ref identifiersTable);
                 }
                 else if (char.IsDigit(currentChar))
                 {
-                    ProcessNumericConstant();
+                    ProcessNumericConstant(ref numericConstantsTable);
                 }
                 else if (currentChar == '"')
                 {
-                    ProcessStringConstant();
+                    ProcessStringConstant(ref stringConstantsTable);
                 }
                 else if (internalLexems.staticOperatorsTable.ContainsKey(currentChar.ToString()) || internalLexems.staticSpecialSymbolsTable.ContainsKey(currentChar.ToString()))
                 {
@@ -66,7 +60,7 @@ namespace yapimt_lab3
             }
         }
 
-        private void ProcessIdentifierOrKeyword(ref List<KeyValuePair<string, int>> lexemSequence)
+        private void ProcessIdentifierOrKeyword(ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string, int)> identifiersTable)
         {
             Buf = "";
             while (position < input.Length && (char.IsLetterOrDigit(input[position]) || input[position] == '_'))
@@ -87,7 +81,7 @@ namespace yapimt_lab3
                 //    keywordsTable[Buf] += 1;
                 //}
                 //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
-                var (type, number) = internalLexems.staticKeywordsTable[Buf];
+                var (type, number) = Buf_Key();
                 KeyValuePair<string, int> nextKeyword = new KeyValuePair<string, int>(type, number);
                 lexemSequence.Add(nextKeyword);
                 //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
@@ -95,12 +89,14 @@ namespace yapimt_lab3
             }
             else
             {
-                var (type, number) = Buf_Ident();
+                var (type, number) = Buf_Ident(ref identifiersTable); 
+                KeyValuePair<string, int> nextIdentifier = new KeyValuePair<string, int>(type, number);
+                lexemSequence.Add(nextIdentifier);
                 //MessageBox.Show($"Identifier: {Buf}, Type: {type}, Number: {number}");
             }
         }
 
-        private void ProcessNumericConstant()
+        private void ProcessNumericConstant(ref Dictionary<string, (string, int)> numericConstantsTable)
         {
             Buf = "";
             while (position < input.Length && char.IsDigit(input[position]))
@@ -109,11 +105,11 @@ namespace yapimt_lab3
                 position++;
             }
 
-            var (type, number) = Buf_Num();
+            var (type, number) = Buf_Num(ref numericConstantsTable);
             //MessageBox.Show($"Numeric Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
-        private void ProcessStringConstant()
+        private void ProcessStringConstant(ref Dictionary<string, (string, int)> stringConstantsTable)
         {
             Buf = "";
             position++; // Пропустить открывающую кавычку
@@ -124,7 +120,7 @@ namespace yapimt_lab3
             }
             position++; // Пропустить закрывающую кавычку
 
-            var (type, number) = Buf_Str();
+            var (type, number) = Buf_Str(ref stringConstantsTable);
             //MessageBox.Show($"String Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
@@ -154,16 +150,16 @@ namespace yapimt_lab3
             Buf += c;
         }
 
-        //private (string type, int number) Buf_Key()
-        //{
-        //    if (keywordsTable.ContainsKey(Buf))
-        //    {
-        //        return keywordsTable[Buf];
-        //    }
-        //    return (null, -1);
-        //}
+        private (string type, int number) Buf_Key()
+        {
+            if (internalLexems.staticKeywordsTable.ContainsKey(Buf))
+            {
+                return internalLexems.staticKeywordsTable[Buf];
+            }
+            return (null, -1);
+        }
 
-        private (string type, int number) Buf_Ident()
+        private (string type, int number) Buf_Ident(ref Dictionary<string, (string, int)> identifiersTable)
         {
             if (!identifiersTable.ContainsKey(Buf))
             {
@@ -172,7 +168,7 @@ namespace yapimt_lab3
             return identifiersTable[Buf];
         }
 
-        private (string type, int number) Buf_Num()
+        private (string type, int number) Buf_Num(ref Dictionary<string, (string, int)> numericConstantsTable)
         {
             if (!numericConstantsTable.ContainsKey(Buf))
             {
@@ -181,7 +177,7 @@ namespace yapimt_lab3
             return numericConstantsTable[Buf];
         }
 
-        private (string type, int number) Buf_Str()
+        private (string type, int number) Buf_Str(ref Dictionary<string, (string, int)> stringConstantsTable)
         {
             if (!stringConstantsTable.ContainsKey(Buf))
             {
