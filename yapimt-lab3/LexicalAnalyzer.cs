@@ -115,7 +115,7 @@ namespace yapimt_lab3
             {"}", ("special", 6)},
 
         };
-        private Dictionary<string, (string type, int number)> keywordsTable;
+        private Dictionary<string,int> keywordsTable;
         private Dictionary<string, (string type, int number)> operatorsTable;
         private Dictionary<string, (string type, int number)> specialSymbolsTable;
         private Dictionary<string, (string type, int number)> identifiersTable;
@@ -128,7 +128,7 @@ namespace yapimt_lab3
             this.Buf = "";
         }
 
-        public void Analyze(string _input, ref Dictionary<string, (string type, int number)> _keywordsTable, ref Dictionary<string, (string type, int number)> _operatorsTable, ref Dictionary<string, (string type, int number)> _specialSymbolsTable, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
+        public void Analyze(string _input, ref Dictionary<string, int> _keywordsTable, ref Dictionary<string, (string type, int number)> _operatorsTable, ref Dictionary<string, (string type, int number)> _specialSymbolsTable, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
 
         {
             this.input = _input;
@@ -150,7 +150,7 @@ namespace yapimt_lab3
 
                 if (char.IsLetter(currentChar))
                 {
-                    ProcessIdentifierOrKeyword();
+                    ProcessIdentifierOrKeyword(ref _keywordsTable);
                 }
                 else if (char.IsDigit(currentChar))
                 {
@@ -160,7 +160,7 @@ namespace yapimt_lab3
                 {
                     ProcessStringConstant();
                 }
-                else if (operatorsTable.ContainsKey(currentChar.ToString()) || specialSymbolsTable.ContainsKey(currentChar.ToString()))
+                else if (staticOperatorsTable.ContainsKey(currentChar.ToString()) || staticSpecialSymbolsTable.ContainsKey(currentChar.ToString()))
                 {
                     ProcessOperatorOrSpecialSymbol();
                 }
@@ -171,7 +171,7 @@ namespace yapimt_lab3
             }
         }
 
-        private void ProcessIdentifierOrKeyword()
+        private void ProcessIdentifierOrKeyword(ref Dictionary<string, int> keywordsTable)
         {
             Buf = "";
             while (position < input.Length && (char.IsLetterOrDigit(input[position]) || input[position] == '_'))
@@ -182,13 +182,21 @@ namespace yapimt_lab3
 
             if (staticKeywordsTable.ContainsKey(Buf))
             {
-                var (type, number) = keywordsTable[Buf];
-                MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
+                if(!keywordsTable.ContainsKey(Buf))
+                {
+                    var (type, number) = staticKeywordsTable[Buf];
+                    keywordsTable[Buf] = 1;
+                }
+                else
+                {
+                    keywordsTable[Buf] += 1;
+                }
+                //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
             }
             else
             {
                 var (type, number) = Buf_Ident();
-                MessageBox.Show($"Identifier: {Buf}, Type: {type}, Number: {number}");
+                //MessageBox.Show($"Identifier: {Buf}, Type: {type}, Number: {number}");
             }
         }
 
@@ -202,7 +210,7 @@ namespace yapimt_lab3
             }
 
             var (type, number) = Buf_Num();
-            MessageBox.Show($"Numeric Constant: {Buf}, Type: {type}, Number: {number}");
+            //MessageBox.Show($"Numeric Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
         private void ProcessStringConstant()
@@ -217,7 +225,7 @@ namespace yapimt_lab3
             position++; // Пропустить закрывающую кавычку
 
             var (type, number) = Buf_Str();
-            MessageBox.Show($"String Constant: {Buf}, Type: {type}, Number: {number}");
+            //MessageBox.Show($"String Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
         private void ProcessOperatorOrSpecialSymbol()
@@ -227,13 +235,13 @@ namespace yapimt_lab3
 
             if (staticOperatorsTable.ContainsKey(Buf))
             {
-                var (type, number) = operatorsTable[Buf];
-                MessageBox.Show($"Operator: {Buf}, Type: {type}, Number: {number}");
+                var (type, number) = staticOperatorsTable[Buf];
+                //MessageBox.Show($"Operator: {Buf}, Type: {type}, Number: {number}");
             }
             else if (staticSpecialSymbolsTable.ContainsKey(Buf))
             {
-                var (type, number) = specialSymbolsTable[Buf];
-                MessageBox.Show($"Special Symbol: {Buf}, Type: {type}, Number: {number}");
+                var (type, number) = staticSpecialSymbolsTable[Buf];
+                //MessageBox.Show($"Special Symbol: {Buf}, Type: {type}, Number: {number}");
             }
         }
 
@@ -242,14 +250,14 @@ namespace yapimt_lab3
             Buf += c;
         }
 
-        private (string type, int number) Buf_Key()
-        {
-            if (keywordsTable.ContainsKey(Buf))
-            {
-                return keywordsTable[Buf];
-            }
-            return (null, -1);
-        }
+        //private (string type, int number) Buf_Key()
+        //{
+        //    if (keywordsTable.ContainsKey(Buf))
+        //    {
+        //        return keywordsTable[Buf];
+        //    }
+        //    return (null, -1);
+        //}
 
         private (string type, int number) Buf_Ident()
         {

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 namespace yapimt_lab3
 {
     public partial class lexer : Form
@@ -13,7 +15,7 @@ namespace yapimt_lab3
 
             analyzer = new LexicalAnalyzer();
         }
-        private Dictionary<string, (string type, int number)> keywordsTable;
+        private Dictionary<string, int> keywordsTable;
         private Dictionary<string, (string type, int number)> operatorsTable;
         private Dictionary<string, (string type, int number)> specialSymbolsTable;
         private Dictionary<string, (string type, int number)> identifiersTable;
@@ -36,7 +38,7 @@ namespace yapimt_lab3
 
         private void buttonAnalyze_Click(object sender, EventArgs e)
         {
-            keywordsTable = new Dictionary<string, (string, int)>();
+            keywordsTable = new Dictionary<string, int>();
             operatorsTable = new Dictionary<string, (string, int)>();
             specialSymbolsTable = new Dictionary<string, (string, int)>();
             identifiersTable = new Dictionary<string, (string, int)>();
@@ -44,6 +46,13 @@ namespace yapimt_lab3
             stringConstantsTable = new Dictionary<string, (string, int)>();
             string textToAnalyze  = codeTextBox.Text;
             analyzer.Analyze(textToAnalyze, ref keywordsTable, ref operatorsTable, ref specialSymbolsTable, ref identifiersTable, ref numericConstantsTable, ref stringConstantsTable);
+            string keywordsOut = "";
+            
+            //foreach (KeyValuePair<string, int> entry in keywordsTable)
+            //{
+            //    keywordsOut += $"{entry.Key} met {entry.Value.ToString()} times {Environment.NewLine}";
+            //}
+            //MessageBox.Show(keywordsOut);
         }
     }
 }
