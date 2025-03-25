@@ -22,7 +22,19 @@ namespace yapimt_lab3
             this.Buf = "";
         }
 
-        public void Analyze(string _input, ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string type, int number)> identifiersTable, ref Dictionary<string, (string type, int number)> numericConstantsTable, ref Dictionary<string, (string type, int number)> stringConstantsTable)
+        public void Analyze(
+            string _input, 
+            ref List<KeyValuePair<string, int>> lexemSequence, 
+            ref Dictionary<string, (string type, int number)> identifiersTable, 
+            ref Dictionary<string, (string type, int number)> numericConstantsTable, 
+            ref Dictionary<string, (string type, int number)> stringConstantsTable,
+            ref Dictionary<string, int> identifiersList,
+            ref Dictionary<string, int> numericConstantsList,
+            ref Dictionary<string, int> stringConstantsList,
+            ref Dictionary<string, int> keywordsList,
+            ref Dictionary<string, int> operatorsList,
+            ref Dictionary<string, int> specSymbolsList
+            )
 
         {
             this.input = _input;
@@ -41,22 +53,22 @@ namespace yapimt_lab3
                 // Если первый символ - буква, то это либо ключевое слово, либо идентификатор
                 if (char.IsLetter(currentChar))
                 {
-                    ProcessIdentifierOrKeyword(ref lexemSequence, ref identifiersTable);
+                    ProcessIdentifierOrKeyword(ref lexemSequence, ref identifiersTable, ref identifiersList, ref keywordsList);
                 }
                 // Если первый символ - цифра, то лексема является числовой константой
                 else if (char.IsDigit(currentChar))
                 {
-                    ProcessNumericConstant(ref lexemSequence, ref numericConstantsTable);
+                    ProcessNumericConstant(ref lexemSequence, ref numericConstantsTable, ref numericConstantsList);
                 }
                 // Если первый символ - начало строки
                 else if (currentChar == '"')
                 {
-                    ProcessStringConstant(ref lexemSequence, ref stringConstantsTable);
+                    ProcessStringConstant(ref lexemSequence, ref stringConstantsTable, ref stringConstantsList);
                 }
                 // Если есть в списке операторов или символов
                 else if (internalLexems.staticOperatorsTable.ContainsKey(currentChar.ToString()) || internalLexems.staticSpecialSymbolsTable.ContainsKey(currentChar.ToString()))
                 {
-                    ProcessOperatorOrSpecialSymbol(ref lexemSequence);
+                    ProcessOperatorOrSpecialSymbol(ref lexemSequence, ref operatorsList, ref specSymbolsList);
                 }
                 // Идем дальше если не смогли определить (конец строки, табы и т.д.)
                 else
@@ -66,13 +78,30 @@ namespace yapimt_lab3
             }
         }
 
+        private void AddToList(ref Dictionary<string, int> targetList)
+        {
+            if (!targetList.ContainsKey(Buf))
+            {
+                targetList[Buf] = 1;
+            }
+            else
+            {
+                targetList[Buf] += 1;
+            }
+        }
+
         private void AddToSequence(string type, int number, ref List<KeyValuePair<string, int>> lexemSequence)
         {
             KeyValuePair<string, int> nextLexem = new KeyValuePair<string, int>(type, number);
             lexemSequence.Add(nextLexem);
         }
 
-        private void ProcessIdentifierOrKeyword(ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string, int)> identifiersTable)
+        private void ProcessIdentifierOrKeyword(
+            ref List<KeyValuePair<string, int>> lexemSequence, 
+            ref Dictionary<string, (string, int)> identifiersTable,
+            ref Dictionary<string, int> identifiersList,
+            ref Dictionary<string, int> keywordsList
+            )
         {
             // Очистка предыдущего содержимого буфера
             Buf = "";
@@ -85,19 +114,10 @@ namespace yapimt_lab3
             // Если есть в списке ключевых слов
             if (internalLexems.staticKeywordsTable.ContainsKey(Buf))
             {
-                //if(!keywordsTable.ContainsKey(Buf))
-                //{
-                //    var (type, number) = internalLexems.staticKeywordsTable[Buf];
-                //    keywordsTable[Buf] = 1;
-                //}
-                //else
-                //{
-                //    keywordsTable[Buf] += 1;
-                //}
-                //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
 
                 // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = Buf_Key();
+                AddToList(ref keywordsList);
                 AddToSequence(type, number, ref lexemSequence);
 
             }
@@ -106,11 +126,16 @@ namespace yapimt_lab3
             {
                 // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = Buf_Ident(ref identifiersTable);
+                AddToList(ref identifiersList);
                 AddToSequence(type, number, ref lexemSequence);
             }
         }
 
-        private void ProcessNumericConstant(ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string, int)> numericConstantsTable)
+        private void ProcessNumericConstant(
+            ref List<KeyValuePair<string, int>> lexemSequence, 
+            ref Dictionary<string, (string, int)> numericConstantsTable,
+            ref Dictionary<string, int> numericConstantsList
+            )
         {
             Buf = "";
             while (position < input.Length && char.IsDigit(input[position]))
@@ -121,10 +146,15 @@ namespace yapimt_lab3
 
             // Получаем тип, номер - записываем в lexemSequence
             var (type, number) = Buf_Num(ref numericConstantsTable);
+            AddToList(ref numericConstantsList);
             AddToSequence(type, number, ref lexemSequence);
         }
 
-        private void ProcessStringConstant(ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string, int)> stringConstantsTable)
+        private void ProcessStringConstant(
+            ref List<KeyValuePair<string, int>> lexemSequence, 
+            ref Dictionary<string, (string, int)> stringConstantsTable,
+            ref Dictionary<string, int> stringConstantsList
+            )
         {
             Buf = "";
             position++; // Пропустить открывающую кавычку
@@ -137,10 +167,15 @@ namespace yapimt_lab3
 
             // Получаем тип, номер - записываем в lexemSequence
             var (type, number) = Buf_Str(ref stringConstantsTable);
+            AddToList(ref stringConstantsList);
             AddToSequence(type, number, ref lexemSequence);
         }
 
-        private void ProcessOperatorOrSpecialSymbol(ref List<KeyValuePair<string, int>> lexemSequence)
+        private void ProcessOperatorOrSpecialSymbol(
+            ref List<KeyValuePair<string, int>> lexemSequence,
+            ref Dictionary<string, int> operatorsList,
+            ref Dictionary<string, int> specSymbolsList
+            )
         {
             Buf = input[position].ToString();
             position++;
@@ -150,6 +185,7 @@ namespace yapimt_lab3
             {
                 // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = internalLexems.staticOperatorsTable[Buf];
+                AddToList(ref operatorsList);
                 AddToSequence(type, number, ref lexemSequence);
             }
             // Если в списке спец символов
@@ -157,6 +193,7 @@ namespace yapimt_lab3
             {
                 // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = internalLexems.staticSpecialSymbolsTable[Buf];
+                AddToList(ref specSymbolsList);
                 AddToSequence(type, number, ref lexemSequence);
             }
         }
