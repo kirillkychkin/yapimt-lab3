@@ -102,7 +102,7 @@ namespace yapimt_lab3
             {"||", ("operator", 10)},
             {"++", ("operator", 11)},
             {"--", ("operator", 12)},
-            {".", ("operator", 13)},
+            {"+=", ("operator", 13)},
             {"^", ("operator", 14)},
             {"!", ("operator", 15)},
             {"?", ("operator", 16)},
@@ -119,6 +119,8 @@ namespace yapimt_lab3
             {"%", ("operator", 27)},
             {"=>", ("operator", 28)},
             {"//", ("operator", 29)},
+            {"-=", ("operator", 30)},
+            {"=", ("operator", 31)},
         };
         public static Dictionary<string, (string type, int number)> staticSpecialSymbolsTable = new Dictionary<string, (string, int)>
         {

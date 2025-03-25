@@ -8,6 +8,7 @@ namespace yapimt_lab3
 {
     using System;
     using System.Collections.Generic;
+    using static System.Net.Mime.MediaTypeNames;
     using static System.Runtime.InteropServices.JavaScript.JSType;
 
     public class LexicalAnalyzer
@@ -15,6 +16,7 @@ namespace yapimt_lab3
         private string input;
         private int position;
         private string Buf;
+        private bool isStringLiteral;
 
         public LexicalAnalyzer()
         {
@@ -51,7 +53,7 @@ namespace yapimt_lab3
                     continue;
                 }
                 // Если первый символ - буква, то это либо ключевое слово, либо идентификатор
-                if (char.IsLetter(currentChar))
+                if (char.IsLetter(currentChar) || input[position] == '_')
                 {
                     ProcessIdentifierOrKeyword(ref lexemSequence, ref identifiersTable, ref identifiersList, ref keywordsList);
                 }
@@ -61,8 +63,16 @@ namespace yapimt_lab3
                     ProcessNumericConstant(ref lexemSequence, ref numericConstantsTable, ref numericConstantsList);
                 }
                 // Если первый символ - начало строки
-                else if (currentChar == '"')
+                else if (currentChar == '"' || currentChar == '\'')
                 {
+                    if(currentChar == '"')
+                    {
+                        isStringLiteral = true;
+                    }
+                    else
+                    {
+                        isStringLiteral = false;
+                    }
                     ProcessStringConstant(ref lexemSequence, ref stringConstantsTable, ref stringConstantsList);
                 }
                 // Если есть в списке операторов или символов
@@ -158,7 +168,15 @@ namespace yapimt_lab3
         {
             Buf = "";
             position++; // Пропустить открывающую кавычку
-            while (position < input.Length && input[position] != '"')
+            if (isStringLiteral)
+            {
+                while (position < input.Length && input[position] != '"')
+                {
+                    Pbuf(input[position]);
+                    position++;
+                }
+            }
+            else
             {
                 Pbuf(input[position]);
                 position++;
@@ -179,10 +197,32 @@ namespace yapimt_lab3
         {
             Buf = input[position].ToString();
             position++;
-            
+
+            while (position < input.Length && char.IsDigit(input[position]))
+            {
+                Pbuf(input[position]);
+                position++;
+            }
+
             // Если в списке операторов
             if (internalLexems.staticOperatorsTable.ContainsKey(Buf))
             {
+                // Если лексема не односимвольная
+                while (position < input.Length && internalLexems.staticOperatorsTable.ContainsKey(input[position].ToString()))
+                {
+                    Pbuf(input[position]);
+                    position++;
+                }
+
+                // Если обнаружили комментарий
+                if (Buf == "//")
+                {
+                    while (position < input.Length && input[position] != '\n')
+                    {
+                        position++;
+                    }
+                }
+
                 // Получаем тип, номер - записываем в lexemSequence
                 var (type, number) = internalLexems.staticOperatorsTable[Buf];
                 AddToList(ref operatorsList);
