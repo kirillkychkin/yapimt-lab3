@@ -49,7 +49,8 @@ namespace yapimt_lab3
             {
                 keywordsOut += $"type: {entry.Key} number:  {entry.Value.ToString()} {Environment.NewLine}";
             }
-            MessageBox.Show(keywordsOut);
+            MessageBox.Show("Готово! Посмотрите результат на вкладке Результат анализа");
+            textSequence.Text = keywordsOut;
         }
     }
 }
