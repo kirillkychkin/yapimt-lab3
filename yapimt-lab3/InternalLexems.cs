@@ -96,7 +96,28 @@ namespace yapimt_lab3
             {"/", ("operator", 4)},
             {"==", ("operator", 5)},
             {"!=", ("operator", 6)},
-
+            {"&", ("operator", 7)},
+            {"&&", ("operator", 8)},
+            {"|", ("operator", 9)},
+            {"||", ("operator", 10)},
+            {"++", ("operator", 11)},
+            {"--", ("operator", 12)},
+            {".", ("operator", 13)},
+            {"^", ("operator", 14)},
+            {"!", ("operator", 15)},
+            {"?", ("operator", 16)},
+            {":", ("operator", 17)},
+            {"<", ("operator", 18)},
+            {">", ("operator", 19)},
+            {"<=", ("operator", 20)},
+            {">=", ("operator", 21)},
+            {">>", ("operator", 22)},
+            {"<<", ("operator", 23)},
+            {"??", ("operator", 24)},
+            {"[", ("operator", 25)},
+            {"]", ("operator", 26)},
+            {"%", ("operator", 27)},
+            {"=>", ("operator", 28)},
         };
         public static Dictionary<string, (string type, int number)> staticSpecialSymbolsTable = new Dictionary<string, (string, int)>
         {
@@ -106,6 +127,7 @@ namespace yapimt_lab3
             {")", ("special", 4)},
             {"{", ("special", 5)},
             {"}", ("special", 6)},
+            {"}", ("special", 7)},
 
         };
     }

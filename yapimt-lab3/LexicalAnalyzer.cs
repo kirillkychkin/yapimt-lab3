@@ -26,25 +26,29 @@ namespace yapimt_lab3
 
         {
             this.input = _input;
-
+            // Идем до конца ввода
             while (position < input.Length)
             {
+                // Первый символ лексемы
                 char currentChar = input[position];
 
+                // Пропускаем пробелы
                 if (char.IsWhiteSpace(currentChar))
                 {
                     position++;
                     continue;
                 }
-
+                // Если первый символ - буква, то это либо ключевое слово, либо идентификатор
                 if (char.IsLetter(currentChar))
                 {
                     ProcessIdentifierOrKeyword(ref lexemSequence, ref identifiersTable);
                 }
+                // Если первый символ - цифра, то лексема является числовой константой
                 else if (char.IsDigit(currentChar))
                 {
                     ProcessNumericConstant(ref numericConstantsTable);
                 }
+                // Если первый символ - начало строки
                 else if (currentChar == '"')
                 {
                     ProcessStringConstant(ref stringConstantsTable);
@@ -53,6 +57,7 @@ namespace yapimt_lab3
                 {
                     ProcessOperatorOrSpecialSymbol(ref lexemSequence);
                 }
+                // идем дальше если не смогли определить (конец строки, табы и т.д.)
                 else
                 {
                     position++;
@@ -84,7 +89,6 @@ namespace yapimt_lab3
                 var (type, number) = Buf_Key();
                 KeyValuePair<string, int> nextKeyword = new KeyValuePair<string, int>(type, number);
                 lexemSequence.Add(nextKeyword);
-                //MessageBox.Show($"Keyword: {Buf}, Type: {type}, Number: {number}");
 
             }
             else
@@ -92,7 +96,6 @@ namespace yapimt_lab3
                 var (type, number) = Buf_Ident(ref identifiersTable); 
                 KeyValuePair<string, int> nextIdentifier = new KeyValuePair<string, int>(type, number);
                 lexemSequence.Add(nextIdentifier);
-                //MessageBox.Show($"Identifier: {Buf}, Type: {type}, Number: {number}");
             }
         }
 
@@ -106,7 +109,6 @@ namespace yapimt_lab3
             }
 
             var (type, number) = Buf_Num(ref numericConstantsTable);
-            //MessageBox.Show($"Numeric Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
         private void ProcessStringConstant(ref Dictionary<string, (string, int)> stringConstantsTable)
@@ -121,7 +123,6 @@ namespace yapimt_lab3
             position++; // Пропустить закрывающую кавычку
 
             var (type, number) = Buf_Str(ref stringConstantsTable);
-            //MessageBox.Show($"String Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
         private void ProcessOperatorOrSpecialSymbol(ref List<KeyValuePair<string, int>> lexemSequence)
@@ -132,14 +133,12 @@ namespace yapimt_lab3
             if (internalLexems.staticOperatorsTable.ContainsKey(Buf))
             {
                 var (type, number) = internalLexems.staticOperatorsTable[Buf];
-                //MessageBox.Show($"Operator: {Buf}, Type: {type}, Number: {number}");
                 KeyValuePair<string, int> nextOperator = new KeyValuePair<string, int>(type, number);
                 lexemSequence.Add(nextOperator);
             }
             else if (internalLexems.staticSpecialSymbolsTable.ContainsKey(Buf))
             {
                 var (type, number) = internalLexems.staticSpecialSymbolsTable[Buf];
-                //MessageBox.Show($"Special Symbol: {Buf}, Type: {type}, Number: {number}");
                 KeyValuePair<string, int> nextSymbol = new KeyValuePair<string, int>(type, number);
                 lexemSequence.Add(nextSymbol);
             }
