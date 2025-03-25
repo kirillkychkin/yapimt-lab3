@@ -16,9 +16,6 @@ namespace yapimt_lab3
         private int position;
         private string Buf;
 
-        private Dictionary<string, (string type, int number)> keywordsTable;
-        private Dictionary<string, (string type, int number)> operatorsTable;
-        private Dictionary<string, (string type, int number)> specialSymbolsTable;
         private Dictionary<string, (string type, int number)> identifiersTable;
         private Dictionary<string, (string type, int number)> numericConstantsTable;
         private Dictionary<string, (string type, int number)> stringConstantsTable;
@@ -29,13 +26,10 @@ namespace yapimt_lab3
             this.Buf = "";
         }
 
-        public void Analyze(string _input, ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string type, int number)> _keywordsTable, ref Dictionary<string, (string type, int number)> _operatorsTable, ref Dictionary<string, (string type, int number)> _specialSymbolsTable, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
+        public void Analyze(string _input, ref List<KeyValuePair<string, int>> lexemSequence, ref Dictionary<string, (string type, int number)> _identifiersTable, ref Dictionary<string, (string type, int number)> _numericConstantsTable, ref Dictionary<string, (string type, int number)> _stringConstantsTable)
 
         {
             this.input = _input;
-            keywordsTable = _keywordsTable;
-            operatorsTable = _operatorsTable;
-            specialSymbolsTable = _specialSymbolsTable;
             identifiersTable = _identifiersTable;
             numericConstantsTable = _numericConstantsTable;
             stringConstantsTable = _stringConstantsTable;
@@ -63,7 +57,7 @@ namespace yapimt_lab3
                 }
                 else if (internalLexems.staticOperatorsTable.ContainsKey(currentChar.ToString()) || internalLexems.staticSpecialSymbolsTable.ContainsKey(currentChar.ToString()))
                 {
-                    ProcessOperatorOrSpecialSymbol();
+                    ProcessOperatorOrSpecialSymbol(ref lexemSequence);
                 }
                 else
                 {
@@ -134,7 +128,7 @@ namespace yapimt_lab3
             //MessageBox.Show($"String Constant: {Buf}, Type: {type}, Number: {number}");
         }
 
-        private void ProcessOperatorOrSpecialSymbol()
+        private void ProcessOperatorOrSpecialSymbol(ref List<KeyValuePair<string, int>> lexemSequence)
         {
             Buf = input[position].ToString();
             position++;
@@ -143,11 +137,15 @@ namespace yapimt_lab3
             {
                 var (type, number) = internalLexems.staticOperatorsTable[Buf];
                 //MessageBox.Show($"Operator: {Buf}, Type: {type}, Number: {number}");
+                KeyValuePair<string, int> nextOperator = new KeyValuePair<string, int>(type, number);
+                lexemSequence.Add(nextOperator);
             }
             else if (internalLexems.staticSpecialSymbolsTable.ContainsKey(Buf))
             {
                 var (type, number) = internalLexems.staticSpecialSymbolsTable[Buf];
                 //MessageBox.Show($"Special Symbol: {Buf}, Type: {type}, Number: {number}");
+                KeyValuePair<string, int> nextSymbol = new KeyValuePair<string, int>(type, number);
+                lexemSequence.Add(nextSymbol);
             }
         }
 
